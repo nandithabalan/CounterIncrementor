@@ -4,11 +4,13 @@ package com.incrementor;
 
 import com.incrementor.task.Incrementor;
 import com.incrementor.task.IncrementorTask;
+import com.incrementor.task.IncrementorTaskAdder;
 import com.incrementor.task.IncrementorTaskAtomic;
 
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.logging.Logger;
 
 public class CounterIncrementor {
@@ -62,11 +64,11 @@ public class CounterIncrementor {
     }
 
     private static String getIncrementorApproach() {
-        log.info(" Please Type in Approach for the program (Atomic/Synchronized) ::");
+        log.info(" Please Type in Approach for the program (Atomic/Synchronized/LongAdder) ::");
         String input = "Atomic";
         Scanner in = new Scanner(System.in);
         input = in.nextLine();
-        if(input.isEmpty() || !("Atomic".equals(input) || "Synchronized".equals(input))){
+        if(input.isEmpty() || !("Atomic".equals(input) || "Synchronized".equals(input) || "LongAdder".equals(input))){
             log.info("Please enter correct approach");
             input = getIncrementorApproach();
         }
@@ -85,6 +87,11 @@ public class CounterIncrementor {
                 Counter  count = new Counter();
                 incrementor = new IncrementorTask(count);
                 break;
+            case "LongAdder" :
+                LongAdder countAdder = new LongAdder();
+                incrementor = new IncrementorTaskAdder(countAdder);
+                break;
+
         }
         return incrementor;
 
