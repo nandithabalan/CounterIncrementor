@@ -21,15 +21,27 @@ public class IncrementorTaskAtomic  implements Callable<Integer>,  Incrementor {
 
     @Override
     public Integer increment() {
+        int oldCount;
+        boolean isMax = false;
         while(true) {
-            final int oldCount = counter.get();
+            boolean isUpdated = false;
+            do {
+                oldCount = counter.get();
+                //log.info("Counter"+counter);
+                if (oldCount == 1000000){
+                    isMax = true;
+                    break;
+                }
+                isUpdated = counter.compareAndSet(oldCount, oldCount + 1);
 
-            if(oldCount == 1000000)
+            }while(!isUpdated);
+
+            if(isMax){
                 break;
-            counter.compareAndSet(oldCount, oldCount + 1);
-            //log.info("Counter"+counter);
+            }
         }
-        return counter.get();
+        return oldCount;
+
     }
 
     @Override
